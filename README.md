@@ -7,9 +7,11 @@ TSymbiote attaches to running Tailscale processes and impersonates them.
 It allows sending concurrent requests to multiple hosts.
 
 You can see the state of tailnet from the view of a host and surface debug information from multiple hosts at once.
-The Golang based binary is portable and should allow for easier remote debugging of clients on windows/macos/linux as well.
+The Golang based binary is portable and should allow for easier remote debugging of clients on macos/linux as well.
+I have not tested anything other than linux yet, i doubt windows will work out of the box either.
 
 This is very much a work in progres, `use at your own risk`.  
+There are some broken features and things need to be moved around in the UI, but it's mostly functional.   
 I make `no guarantees of security or functionality`, this is not a service that I would leaving running at all times.
 
 

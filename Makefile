@@ -8,4 +8,4 @@ generate: deps
 
 .PHONY: build
 build:
-	go build -o bin/tsymbiote main.go
+	go build -o dist/tsymbiote main.go
