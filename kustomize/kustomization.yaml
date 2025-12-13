@@ -1,0 +1,7 @@
+resources:
+- controller/
+
+#images:
+#- name: controller
+#  newName: placeholder
+#  newTag: placeholder

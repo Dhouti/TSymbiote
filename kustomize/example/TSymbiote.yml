@@ -1,0 +1,24 @@
+# Deployment example
+apiVersion: tsymbiote.dhouti.dev/v1alpha1
+kind: TSymbiote
+metadata:
+  name: tsymbiote
+  namespace: tsymbiote
+spec:
+  authSecretRef:
+    name: tsymbiote-webui
+  # Everything below this comment is optional.
+  pod:
+    tolerations:
+    - effect: NoSchedule
+      key: a-taint
+      operator: Exists
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/arch
+              operator: In
+              values:
+              - arm64

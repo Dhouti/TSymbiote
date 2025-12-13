@@ -1,0 +1,6 @@
+resources:
+- ../../operator/config/default
+
+patches:
+- path: mutatingwebhookconfig.yml
+- path: namespace.yml
