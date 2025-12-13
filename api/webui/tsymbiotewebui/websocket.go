@@ -24,7 +24,6 @@ func (t *TSymbioteUIServer) RelativeWebsocket(w http.ResponseWriter, r *tsymbiot
 		// Check for a substring match and set targetPath to the adapter version
 		if strings.Contains(r.URL.Path, path.String()) {
 			targetPath = path.Adapter()
-			r.WS.Close()
 			break
 		}
 	}
@@ -46,6 +45,7 @@ func (t *TSymbioteUIServer) RelativeWebsocket(w http.ResponseWriter, r *tsymbiot
 	}
 
 	// the url param should be csv
+	// For large amounts of hosts this may need to be moved into the websocket connection.
 	targets := strings.Split(rawTargets, ",")
 
 	if len(targets) == 0 {

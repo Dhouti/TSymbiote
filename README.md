@@ -1,17 +1,19 @@
 # TSymbiote
 A debugging tool for Tailscale.
 
+This is very much a tool for nerds, but could be useful for remotely debugging performance or implemention issues.
+
 TSymbiote attaches to running Tailscale processes and impersonates them.
 It allows sending concurrent requests to multiple hosts.
 
 You can see the state of tailnet from the view of a host and surface debug information from multiple hosts at once.
 The Golang based binary is portable and should allow for easier remote debugging of clients on windows/macos/linux as well.
 
-This is very much a work in progres, `use at your own risk`.
+This is very much a work in progres, `use at your own risk`.  
 I make `no guarantees of security or functionality`, this is not a service that I would leaving running at all times.
 
 
-
+![Tsymbiote](tsymbiote.png)
 
 
 TSymbiote is a combination of two components, the adapter and the web ui.
@@ -186,6 +188,9 @@ https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace
 
 
 # TODO
+## Usage examples
+Yeah it's not really documented yet, we'll get there.
+
 ## Headscale
 Headscale support should be fairly straightforward to add if there's interest.
 
@@ -212,5 +217,5 @@ Really whatever is asked for will probably published.
 Happy to hear about how you've implemented this as well if you do.
 
 ## Auth
-In general it is very simplistic and needs improvement supporting a config at runtime and supporting more methods for web-ui specifically.
+In general it is very simplistic and could probably be improved, supporting a config at runtime and supporting more methods for web-ui specifically.
 

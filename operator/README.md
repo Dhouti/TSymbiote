@@ -1,4 +1,4 @@
-Automatically injects a CLI wrapper adapter into labeled pods.
+Automatically injects an adapter into labeled pods.
 
 Label Namespace and Pod with the following to enable injection:
     tsymbiote-adapter-injection: enabled
