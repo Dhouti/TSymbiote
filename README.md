@@ -1,24 +1,61 @@
 # TSymbiote
 A debugging tool for Tailscale.
 
-This is very much a tool for nerds, but could be useful for remotely debugging performance or implemention issues.
+I originally created this as my personal Tailscale deployment had no easy way to map it due to network flow logs being a Premium+ feature. 
 
-TSymbiote attaches to running Tailscale processes and impersonates them.
-It allows sending concurrent requests to multiple hosts.
+Every feature added to Tsymbiote (Kubernetes Operator excluded) will work for free users.  
+With a little more work it can be fully compatible with `Headscale` as well if there is interest.  
+TSymbiote can be used to map a current network and allow for debugging remote hosts.
 
-You can see the state of tailnet from the view of a host and surface debug information from multiple hosts at once.
-The Golang based binary is portable and should allow for easier remote debugging of clients on macos/linux as well.
-I have not tested anything other than linux yet, i doubt windows will work out of the box either.
+TSymbiote attaches to an existing Tailscale deployment or client, essentially impersonating it.  
+The WebUI when there are multiple adapters present will allow sending concurrent requests/commands to every selected host.
 
-This is very much a work in progres, `use at your own risk`.  
-There are some broken features and things need to be moved around in the UI, but it's mostly functional.   
-I make `no guarantees of security or functionality`, this is not a service that I would leaving running at all times.
+This means for instance, you can run a `Ping` from every host with a TSymbiote adapter to every peer it can communicate with at once.    
+The connections between node/peer is color coded with the last ping response received from the target.
+
+You can see the state of tailnet from the view of a host and surface debug information from multiple hosts at once.  
+
+One use case could be a client is having trouble with their Tailscale client, be it connection, etc. 
+You can give them an auth key and interact with tailscaled directly on their machine while supplying them a single command to run in their terminal.
+
+This is very much a work in progress/hobby project, `use at your own risk`.  
+ 
+I make `no guarantees of security or functionality`.
 
 
 ![Tsymbiote](tsymbiote.png)
 
 
-TSymbiote is a combination of two components, the adapter and the web ui.
+# Basic usage
+Both the WebUI and Adapter can be run as CLIs.
+
+Set the environment variables below using a key that has `devices:core:read` and `auth_keys` scopes:
+```
+TS_OAUTH_CLIENT_ID
+TS_OAUTH_CLIENT_SECRET
+```
+```
+tsymbiote webui --generate-auth
+```
+
+The `--generate-auth` is used to generate an auth key for itself so the service can utilize `tsnet`.  
+If you do not include this flag, you do not need the `auth_keys` scope, but you will need to supply `TS_AUTHKEY` via env var. 
+The webui will be served over `tsnet` by default on the port `3621`.
+
+`--dev` can be added if you'd like to access the service over http/localhost instead.
+
+
+The adapter can also be run locally.
+(This has only been tested on Linux, but it should work on MacOS, Windows i am entirely unsure.)
+Supply a `tsnet` auth key using the `TS_AUTHKEY` env var.  
+NOTE: If you supply an ephemeral key, shutdown of the adapter will invalidate the credentials immediately.
+
+```
+tsymbiote adapter
+```  
+
+If your tailscaled socket is in a different location (windows) you may need to supply `--socket=$PATH_TO_TAILSCALED`.
+
 
 ## Adapter
 The adapter attaches to a running Tailscale host and executes LocalAPI calls AS the host.
@@ -190,8 +227,6 @@ https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace
 
 
 # TODO
-## Usage examples
-Yeah it's not really documented yet, we'll get there.
 
 ## Headscale
 Headscale support should be fairly straightforward to add if there's interest.
@@ -205,6 +240,7 @@ There may be something that can be done on that front, but we'll see.
 
 ## App Capabilities
 Another layer of auth for the webui could be added with App Capabilites.
+Not sure how useful or necessary this really is.
 
 Turning on/off the different commands that users or the UI itself can run.
 
@@ -221,3 +257,10 @@ Happy to hear about how you've implemented this as well if you do.
 ## Auth
 In general it is very simplistic and could probably be improved, supporting a config at runtime and supporting more methods for web-ui specifically.
 
+
+# Dev
+If you want to hack on the code yourself:
+`make dev` to build the correct web ui and start it in HTTP mode  
+`npm run dev` in the `web-ui` directory
+
+In most cases in on a linux host the adapter can just be run with no flags provided.

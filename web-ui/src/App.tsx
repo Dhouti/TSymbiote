@@ -1037,7 +1037,6 @@ function App() {
         fetchDNSConfig={fetchDNSConfig}
         fetchServeConfig={fetchServeConfig}
         fetchAppConnRoutes={fetchAppConnRoutes}
-        fetchGoroutines={fetchGoroutines}
         fetchLogs={fetchLogs}
         fetchBusEvents={fetchBusEvents}
         openQueryDNSModal={() => setShowQueryDNSModal(true)}
@@ -1200,7 +1199,16 @@ function App() {
         <Modal
           title="Pprof"
           onClose={closePprofModal}
-          onSubmit={() => { if (!statusLoading) fetchPprof(); }}
+          onSubmit={() => {
+            if (!statusLoading) {
+              if (pprofType === 'goroutine') {
+                fetchGoroutines();
+                closePprofModal();
+              } else {
+                fetchPprof();
+              }
+            }
+          }}
         >
           <div>
             <FormLabel>Type</FormLabel>
@@ -1229,7 +1237,14 @@ function App() {
           )}
           <ModalActionButtons
             onCancel={closePprofModal}
-            onSubmit={fetchPprof}
+            onSubmit={() => {
+              if (pprofType === 'goroutine') {
+                fetchGoroutines();
+                closePprofModal();
+              } else {
+                fetchPprof();
+              }
+            }}
             submitText="Start"
             submitDisabled={statusLoading}
           />

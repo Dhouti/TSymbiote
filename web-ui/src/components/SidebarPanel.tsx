@@ -32,7 +32,6 @@ interface SidebarPanelProps {
   fetchDNSConfig: () => void;
   fetchServeConfig: () => void;
   fetchAppConnRoutes: () => void;
-  fetchGoroutines: () => void;
   fetchLogs: () => void;
   fetchBusEvents: () => void;
   openQueryDNSModal: () => void;
@@ -66,7 +65,6 @@ export const SidebarPanel = ({
   fetchDNSConfig,
   fetchServeConfig,
   fetchAppConnRoutes,
-  fetchGoroutines,
   fetchLogs,
   fetchBusEvents,
   openQueryDNSModal,
@@ -230,9 +228,6 @@ export const SidebarPanel = ({
                 </CommandButton>
                 <CommandButton onClick={fetchAppConnRoutes} disabled={selectedHosts.size === 0 || statusLoading}>
                   AppConn Routes
-                </CommandButton>
-                <CommandButton onClick={fetchGoroutines} disabled={selectedHosts.size === 0 || statusLoading}>
-                  Goroutines
                 </CommandButton>
                 <CommandButton onClick={fetchLogs} disabled={selectedHosts.size === 0 || isStreaming}>
                   Logs

@@ -367,7 +367,7 @@ export async function executePprof(input: PprofInput): Promise<Response> {
  */
 export async function fetchPprofFile(hostId: string): Promise<ArrayBuffer> {
   const API_BASE_URL = getApiBaseUrl();
-  const response = await fetch(`${API_BASE_URL}/${hostId}.pprof`);
+  const response = await fetch(`${API_BASE_URL}/static/pprof/${hostId}.pprof`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch pprof file: HTTP ${response.status}`);
