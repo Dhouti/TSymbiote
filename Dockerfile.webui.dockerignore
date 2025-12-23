@@ -1,2 +1,4 @@
 # TODO: Does this even do anything with goreleaser?
 **
+
+!dist/

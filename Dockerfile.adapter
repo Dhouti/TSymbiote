@@ -1,7 +1,8 @@
-ARG TARGETOS
-ARG TARGETARCH
-
 # Distroless with root, sadly
 FROM gcr.io/distroless/static:latest
+ARG TARGETOS
+ARG TARGETARCH
+ARG DIST_PATH=$TARGETOS/$TARGETARCH/tsymbiote*
+
 WORKDIR /
-COPY $TARGETOS/$TARGETARCH/tsymbiote* .
+COPY $DIST_PATH /tsymbiote
