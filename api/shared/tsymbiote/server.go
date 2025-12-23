@@ -124,6 +124,7 @@ func (t *TSymbioteServer) ListenAndServe() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	if viper.GetBool("dev") {
 		go func() {
+			t.Log.Infof("Starting listener on http://localhost:%s", viper.GetString("port"))
 			err := t.HTTP().ListenAndServe()
 			if err != nil && !errors.Is(err, http.ErrServerClosed) {
 				t.Log.Errorw("failed to start http server", "error", err)
@@ -131,6 +132,7 @@ func (t *TSymbioteServer) ListenAndServe() {
 		}()
 	} else {
 		go func() {
+			t.Log.Infof("Starting listener on http://%s:%s", t.TSNet().Hostname, viper.GetString("port"))
 			listener, err := t.TSNet().Listen("tcp", fmt.Sprintf(":%s", viper.GetString("port")))
 			if err != nil {
 				t.Log.Errorw("failed to start tsnet listener", "error", err)
