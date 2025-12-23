@@ -120,12 +120,12 @@ export interface QueryDNSResult {
   resolvers?: any[];
 }
 
-export type PprofType = 'profile' | 'allocs' | 'block' | 'heap' | 'mutex' | 'threadcreate' | 'goroutine' | 'cmdline' | 'trace';
+export type PprofType = 'profile' | 'allocs' | 'block' | 'heap' | 'mutex' | 'threadcreate' | 'goroutine';
 
 export interface PprofInput {
   hosts: string[];
   type: PprofType;
-  seconds?: number; // Only used for 'profile' and 'trace' types
+  seconds?: number;
 }
 
 export interface PrefsData {

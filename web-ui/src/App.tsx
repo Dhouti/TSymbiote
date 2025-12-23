@@ -577,12 +577,13 @@ function App() {
   };
 
   const fetchPprof = async () => {
-    // Only validate duration for profile and trace types
-    const needsDuration = pprofType === 'profile' || pprofType === 'trace';
+    const needsDuration = pprofType === 'profile' || pprofType === 'threadcreate' || pprofType === 'mutex' || pprofType === 'heap' || pprofType === 'block' || pprofType === 'allocs';
+    const allowsZero = ['allocs', 'block', 'heap', 'mutex', 'threadcreate'].includes(pprofType);
     const duration = parseInt(pprofDuration, 10);
+    const minDuration = allowsZero ? 0 : 1;
 
-    if (needsDuration && (isNaN(duration) || duration < 1 || duration > 300)) {
-      alert('Duration must be between 1 and 300 seconds');
+    if (needsDuration && (isNaN(duration) || duration < minDuration || duration > 300)) {
+      alert(`Duration must be between ${minDuration} and 300 seconds`);
       return;
     }
 
@@ -1214,7 +1215,15 @@ function App() {
             <FormLabel>Type</FormLabel>
             <FormSelect
               value={pprofType}
-              onChange={(e) => setPprofType(e.target.value as api.PprofType)}
+              onChange={(e) => {
+                const newType = e.target.value as api.PprofType;
+                setPprofType(newType);
+                if (['allocs', 'block', 'heap', 'mutex', 'threadcreate'].includes(newType)) {
+                  setPprofDuration('0');
+                } else if (newType === 'profile') {
+                  setPprofDuration('30');
+                }
+              }}
               options={[
                 { value: 'profile', label: 'Profile (CPU)' },
                 { value: 'heap', label: 'Heap' },
@@ -1223,16 +1232,14 @@ function App() {
                 { value: 'block', label: 'Block' },
                 { value: 'mutex', label: 'Mutex' },
                 { value: 'threadcreate', label: 'Thread Create' },
-                { value: 'trace', label: 'Trace' },
-                { value: 'cmdline', label: 'Cmdline' },
               ]}
             />
           </div>
-          {(pprofType === 'profile' || pprofType === 'trace') && (
+          {(pprofType === 'profile' || pprofType === 'threadcreate' || pprofType === 'mutex' || pprofType === 'heap' || pprofType === 'block' || pprofType === 'allocs') && (
             <div>
               <FormLabel>Duration (seconds)</FormLabel>
-              <FormInput type="number" value={pprofDuration} onChange={(e) => setPprofDuration(e.target.value)} min={1} max={300} />
-              <p className="text-gray-400 text-xs mt-1">Valid range: 1-300 seconds</p>
+              <FormInput type="number" value={pprofDuration} onChange={(e) => setPprofDuration(e.target.value)} min={['allocs', 'block', 'heap', 'mutex', 'threadcreate'].includes(pprofType) ? 0 : 1} max={300} />
+              <p className="text-gray-400 text-xs mt-1">Valid range: {['allocs', 'block', 'heap', 'mutex', 'threadcreate'].includes(pprofType) ? '0' : '1'}-300 seconds</p>
             </div>
           )}
           <ModalActionButtons
