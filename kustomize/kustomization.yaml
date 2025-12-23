@@ -1,7 +1,7 @@
 resources:
 - controller/
 
-#images:
-#- name: controller
-#  newName: placeholder
-#  newTag: placeholder
+images:
+- name: controller
+  newName: ghcr.io/dhouti/tsymbiote-operator
+  newTag: v0.0.3

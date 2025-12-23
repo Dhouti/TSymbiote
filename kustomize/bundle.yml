@@ -1395,7 +1395,7 @@ spec:
         - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
         command:
         - /manager
-        image: controller:latest
+        image: ghcr.io/dhouti/tsymbiote-operator:v0.0.3
         livenessProbe:
           httpGet:
             path: /healthz
