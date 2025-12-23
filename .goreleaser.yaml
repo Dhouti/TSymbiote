@@ -38,8 +38,8 @@ dockers_v2:
     images:
     - ghcr.io/dhouti/tsymbiote-operator
     build_args:
-      TSYMBIOTE_WEBUI_IMAGE: ghcr.io/dhouti/tsymbiote-webui:{{.Version}}
-      TSYMBIOTE_ADAPTER_IMAGE: ghcr.io/dhouti/tsymbiote-adapter:{{.Version}}
+      TSYMBIOTE_WEBUI_IMAGE: ghcr.io/dhouti/tsymbiote-webui:v{{.Version}}
+      TSYMBIOTE_ADAPTER_IMAGE: ghcr.io/dhouti/tsymbiote-adapter:v{{.Version}}
     platforms:
     - linux/amd64
     - linux/arm64

@@ -4,4 +4,4 @@ resources:
 images:
 - name: controller
   newName: ghcr.io/dhouti/tsymbiote-operator
-  newTag: v0.0.3
+  newTag: v0.0.4
