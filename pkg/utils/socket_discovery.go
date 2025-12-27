@@ -7,34 +7,30 @@ import (
 	"os"
 	"regexp"
 	"time"
-
-	"tailscale.com/client/local"
 )
 
-func NewLocalClient(socketDiscovery bool) (*local.Client, error) {
-	lc := &local.Client{}
-
-	if socketDiscovery {
-		// The socket sometimes takes a second to initialize, retry a few times.
-		attempts := 0
-		for attempts < 4 {
-			socketPath, err := discoverSocket()
-			if err != nil {
-				if os.IsNotExist(err) && attempts < 4 {
-					// Short sleep, try again
-					attempts++
-					time.Sleep(time.Millisecond * 150)
-					continue
-				}
-				return nil, err
+// DiscoverSocket is a retry wrapper around discoverSocket
+func DiscoverSocket() (string, error) {
+	// The socket sometimes takes a second to initialize, retry a few times.
+	outPath := ""
+	attempts := 0
+	for attempts < 4 {
+		socketPath, err := discoverSocket()
+		if err != nil {
+			if os.IsNotExist(err) && attempts < 4 {
+				// Short sleep, try again
+				attempts++
+				time.Sleep(time.Millisecond * 150)
+				continue
 			}
-
-			lc.Socket = socketPath
-			break
+			return outPath, err
 		}
+
+		outPath = socketPath
+		break
 	}
 
-	return lc, nil
+	return outPath, nil
 }
 
 var socketRegex = regexp.MustCompile("^[0-9]+$")

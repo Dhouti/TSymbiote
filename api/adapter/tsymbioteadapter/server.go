@@ -29,11 +29,23 @@ func NewTSymbioteAdapter() tsymbiote.TSymbiote {
 		return nil
 	}
 
-	// We need the host adapter client
-	host, err := utils.NewLocalClient(true)
-	if err != nil {
-		tsymbiote.Log.Error("failed to configure tailscale local client", "error", err)
-		return nil
+	// In most environments the default LocalClient works, but we sometimes need to swap the Socket path.
+	hostClient := &local.Client{}
+
+	// Handle custom socket paths
+	customSocketPath := viper.GetString("socket")
+	if customSocketPath != "" {
+		hostClient.Socket = customSocketPath
+	}
+
+	// if --socket and --discover-socket prefer discovery
+	if viper.GetBool("discover-socket") {
+		discoveredSocketPath, err := utils.DiscoverSocket()
+		if err != nil {
+			tsymbiote.Log.Errorw("failed to discover tailscale socket path", err)
+			return nil
+		}
+		hostClient.Socket = discoveredSocketPath
 	}
 
 	allowTag := viper.GetString("allowed-tag")
@@ -44,7 +56,7 @@ func NewTSymbioteAdapter() tsymbiote.TSymbiote {
 
 	adapter := &TSymbioteAdapterServer{
 		TSymbioteServer: tsymbiote,
-		host:            host,
+		host:            hostClient,
 		allowedTag:      allowTag,
 		KnownPeers:      &internal.KnownPeers{},
 	}

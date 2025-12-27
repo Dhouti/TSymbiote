@@ -37,7 +37,7 @@ func init() {
 	adapterCmd.PersistentFlags().String("allowed-tag", "tag:tsymbiote-webui", "Used to prevent access from sources that are not the web-ui. This cannot be an empty string.")
 	adapterCmd.PersistentFlags().StringP("port", "p", "3621", "The port to expose the service on.")
 	adapterCmd.PersistentFlags().Bool("dev", false, "Set true to enable dev, runs the backend in HTTP for local dev.")
-	adapterCmd.PersistentFlags().String("socket", "", "path to tailscaled socket (default /var/run/tailscale/tailscaled.sock)")
+	adapterCmd.PersistentFlags().String("socket", "", "path to tailscaled socket")
 	adapterCmd.PersistentFlags().BoolP("discover-socket", "d", false, "Set true to automatically discover socket path (meant for k8s sidecar deployment)")
 	adapterCmd.PersistentFlags().Bool("logout", true, "true will call logout on exit, this will expire the key or delete if it's ephemeral")
 }
