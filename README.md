@@ -26,18 +26,19 @@ Policy file requirements:
 
 #### Start an adapter
 You can start adapter and use the Tailscale login flow to authenticate without providing an auth key.
+You will need to tag the device after creation with `tag:tsymbiote-adapter`.
 ```
 tsymbiote adapter
 ```
 
-If you wish to provide your own auth key
+If you wish to provide your own auth key:
 ```
 TS_AUTHKEY=your-key tsymbiote adapter
 ```
 
 #### Start WebUI
 
-Set environment variables using an OAuth key with `devices:core:read` and `auth_keys` scopes with the `tag:symbiote-webui` tag:
+Set environment variables using an OAuth key with `devices:core:read` and `auth_keys` scopes with the `tag:tsymbiote-webui` tag:
 ```
 TS_OAUTH_CLIENT_ID
 TS_OAUTH_CLIENT_SECRET
@@ -49,6 +50,11 @@ tsymbiote webui --generate-auth
 
 The WebUI serves over `tsnet` on port `3621` by default. Use `--dev` for http/localhost access.
 
+For non-ephemeral environments, or when running both components on the same machine you may need to set the follwing environment variable:
+```
+TSNET_FORCE_LOGIN=1
+```
+
 ## Components
 
 ### Adapter
@@ -56,8 +62,6 @@ The WebUI serves over `tsnet` on port `3621` by default. Use `--dev` for http/lo
 Attaches to a running Tailscale host and executes LocalAPI calls as that host. Currently Read-Only by design.
 
 **Required for non-interactive sessions:** `TS_AUTHKEY` environment variable
-
-For non-ephemeral environments, you may want to add: `TSNET_FORCE_LOGIN=1`
 
 ```
 Usage:
@@ -106,7 +110,7 @@ Kubernetes operator for automatic adapter injection via mutating webhook. Compat
 
 **Mutating Webhook:** Add this label to namespaces and pods:
 ```
-tsymbiote-adapter-injection: enabled
+tsymbiote-secret-injection: enabled
 ```
 
 **Secrets Controller:** Watches labeled pods and generates ephemeral auth keys automatically. Secrets are garbage-collected when pods are deleted.
