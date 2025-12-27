@@ -9,11 +9,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var buildVersion string = "dev"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "tsymbiote",
-	Short: "A tailscale debug companion.",
-	Long:  `A tailscale debug companion.`,
+	Use:     "tsymbiote",
+	Version: buildVersion,
+	Short:   "A tailscale debug companion.",
+	Long:    `A tailscale debug companion.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
