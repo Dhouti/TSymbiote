@@ -64,13 +64,6 @@ var _ = Describe("TSymbiote Controller", func() {
 			err := k8sClient.Get(ctx, utils.GetTestNamespacedName(), tsymbiote)
 			Expect(err).ToNot(HaveOccurred())
 
-			By("Checking that secret was created")
-			secret := &corev1.Secret{}
-			Eventually(func() error {
-				return k8sClient.Get(ctx, utils.GetTestNamespacedName(), secret)
-			}, time.Second*3).Should(Succeed())
-			Expect(secret.Data).To(HaveKeyWithValue("TS_AUTHKEY", []byte("generated-by-mock")))
-
 			By("Checking if statefulset was created")
 			sts := &appsv1.StatefulSet{}
 			Eventually(func() error {

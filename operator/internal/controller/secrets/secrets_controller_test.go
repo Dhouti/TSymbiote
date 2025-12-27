@@ -61,7 +61,7 @@ var _ = Describe("Secrets Controller", func() {
 						{
 							SecretRef: &corev1.SecretEnvSource{
 								LocalObjectReference: corev1.LocalObjectReference{
-									Name: "tsymbiote-no-labels",
+									Name: "tsymbiote-inject-no-labels",
 								},
 							},
 						},
@@ -82,7 +82,7 @@ var _ = Describe("Secrets Controller", func() {
 			By("updating pod with one of the two labels")
 			Expect(k8sClient.Get(ctx, utils.GetTestNamespacedName(), pod)).To(Succeed())
 			pod.Labels = map[string]string{
-				"tsymbiote-adapter-injection": "enabled",
+				"tsymbiote-secret-injection": "enabled",
 			}
 			Expect(k8sClient.Update(ctx, pod)).To(Succeed())
 
@@ -95,7 +95,7 @@ var _ = Describe("Secrets Controller", func() {
 			By("using the other label")
 			Expect(k8sClient.Get(ctx, utils.GetTestNamespacedName(), pod)).To(Succeed())
 			pod.Labels = map[string]string{
-				"tsymbiote-adapter-injected": "true",
+				"tsymbiote-secret-injected": "true",
 			}
 			Expect(k8sClient.Update(ctx, pod)).To(Succeed())
 
@@ -108,8 +108,8 @@ var _ = Describe("Secrets Controller", func() {
 			By("using incorrect label values")
 			Expect(k8sClient.Get(ctx, utils.GetTestNamespacedName(), pod)).To(Succeed())
 			pod.Labels = map[string]string{
-				"tsymbiote-adapter-injection": "disabled",
-				"tsymbiote-adapter-injected":  "true",
+				"tsymbiote-secret-injection": "disabled",
+				"tsymbiote-secret-injected":  "true",
 			}
 			Expect(k8sClient.Update(ctx, pod)).To(Succeed())
 
@@ -125,8 +125,8 @@ var _ = Describe("Secrets Controller", func() {
 			pod.Name = utils.GetTestName()
 			pod.Namespace = utils.GetTestNamespace()
 			pod.Labels = map[string]string{
-				"tsymbiote-adapter-injection": "enabled",
-				"tsymbiote-adapter-injected":  "true",
+				"tsymbiote-secret-injection": "enabled",
+				"tsymbiote-secret-injected":  "true",
 			}
 			pod.Spec.Containers = []corev1.Container{
 				{
@@ -136,7 +136,7 @@ var _ = Describe("Secrets Controller", func() {
 						{
 							SecretRef: &corev1.SecretEnvSource{
 								LocalObjectReference: corev1.LocalObjectReference{
-									Name: "tsymbiote-with-labels",
+									Name: "tsymbiote-inject-with-labels",
 								},
 							},
 						},
