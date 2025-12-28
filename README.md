@@ -3,7 +3,7 @@
 A debugging tool for Tailscale for network visualization & remote debugging.
 
 TSymbiote attaches to existing Tailscale deployments, allowing you to map your network and debug remote hosts by "impersonating" them.  
-The WebUI supports concurrent requests across multiple adapters—for example, running a `Ping` from every host to all peers it can communicate with concurrently, the node graph shows color coded results.
+The WebUI supports concurrent requests across multiple adapters, for example, running a `Ping` from every host to all peers it can communicate with concurrently, the node graph shows color coded results.
 
 **Use at your own risk. No guarantees of security or functionality.**
 
@@ -135,10 +135,11 @@ Runs as a sidecar in a shared process namespace within Tailscale pods. Requires 
 Relevant docs: [Share Process Namespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/)
 
 ## Development
-
+Corresponding environment variables are still needed.
 ```bash
-make dev                    # Build WebUI and start in HTTP mode
-cd web-ui && npm run dev    # Frontend dev server
+make webui-dev   # Build WebUI and start in HTTP mode
+make web-dev     # Frontend dev server
+make adapter-dev # Start a dev ready adapter
 ```
 
 ## Roadmap
