@@ -36,13 +36,13 @@ func (c *Client) SetKnownHost(host string, adapter string) {
 	c.hosts.Store(host, adapter)
 }
 
-func (c *Client) DeleteHost(host string) error {
-	adapter, ok := c.GetAdapter(host)
+func (c *Client) DeleteAdapter(adapter string) error {
+	host, ok := c.GetHost(adapter)
 	if !ok {
-		return errors.New("could not find adapter to delete")
+		return errors.New("could not find host to delete")
 	}
-	c.hosts.Delete(host)
 	c.adapters.Delete(adapter)
+	c.hosts.Delete(host)
 	return nil
 }
 

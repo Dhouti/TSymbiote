@@ -154,24 +154,20 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // First, fetch hosts
-        const hostsData = await api.fetchHosts();
-        console.log('Hosts data:', hostsData);
-
-        // API returns { hosts: string[] }
-        const hostList = Array.isArray(hostsData) ? hostsData : hostsData.hosts || [];
-        setHosts(hostList);
-
-        // Select all hosts by default
-        setSelectedHosts(new Set(hostList));
-
-        // Now fetch peer map with hosts data available
+        // Fetch peer map (includes hosts)
         const data = await api.fetchPeermap();
         console.log('Parsed data:', data);
 
         // Transform API data to graph format
         if (data && data.nodes && data.edges) {
           console.log('Setting nodes and edges:', data.nodes.length, data.edges.length);
+
+          // Extract hosts from peermap response
+          const hostList = data.hosts || [];
+          setHosts(hostList);
+
+          // Select all hosts by default
+          setSelectedHosts(new Set(hostList));
 
           // Transform nodes to include PeerStatus data
           const transformedNodes = data.nodes.map((nodeData) => {

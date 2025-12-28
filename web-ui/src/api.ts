@@ -8,11 +8,6 @@ export const getApiBaseUrl = (): string => {
     : `${window.location.protocol}//${window.location.hostname}:3621`;
 };
 
-// Types
-export interface HostsResponse {
-  hosts: string[];
-}
-
 // PeerMap types
 export interface PeerNodeData {
   Active: boolean;
@@ -63,6 +58,7 @@ export interface PeerEdge {
 
 export interface PeermapResponse {
   edges: PeerEdge[];
+  hosts: string[];
   nodes: PeerNode[];
 }
 
@@ -248,24 +244,7 @@ export async function fetchHostData<T>(endpoint: string, hosts: string[]): Promi
 }
 
 /**
- * Fetch list of available hosts
- */
-export async function fetchHosts(): Promise<HostsResponse> {
-  const API_BASE_URL = getApiBaseUrl();
-  const response = await fetch(`${API_BASE_URL}/api/Hosts`, {
-    method: 'GET',
-    headers: { 'Accept': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-/**
- * Fetch peer map data
+ * Fetch peer map data (includes hosts)
  */
 export async function fetchPeermap(): Promise<PeermapResponse> {
   const API_BASE_URL = getApiBaseUrl();

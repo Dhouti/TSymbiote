@@ -9,7 +9,6 @@ import (
 	"slices"
 	"time"
 
-	"github.com/dhouti/tsymbiote/api/shared/consts"
 	"github.com/dhouti/tsymbiote/api/shared/consts/paths"
 	"github.com/dhouti/tsymbiote/api/shared/tsymbiote"
 )
@@ -27,8 +26,9 @@ type Node struct {
 }
 
 type NodeGraph struct {
-	Nodes []Node `json:"nodes"`
-	Edges []Edge `json:"edges"`
+	Hosts []string `json:"hosts"`
+	Nodes []Node   `json:"nodes"`
+	Edges []Edge   `json:"edges"`
 }
 
 type peerMapResult struct {
@@ -39,13 +39,18 @@ type peerMapResult struct {
 
 func (t *TSymbioteUIServer) PeerMap(w http.ResponseWriter, r *tsymbiote.HTTPRequest) {
 
-	knownAdapters := t.GetAdapters()
+	devices, err := t.GetDevicesWithTag("tag:tsymbiote-adapter")
+	if err != nil {
+		r.Log.Errorw("failed to list devices", "error", err)
+		r.SetStatusCode(w, http.StatusInternalServerError)
+		return
+	}
 
-	outgoingctx, outgoingcancel := context.WithDeadline(r.Context(), time.Now().Add(consts.OutgoingRequestTimeout))
+	outgoingctx, outgoingcancel := context.WithDeadline(r.Context(), time.Now().Add(time.Second*1))
 	defer outgoingcancel()
 
 	var channels []chan peerMapResult
-	for _, knownAdapter := range knownAdapters {
+	for _, knownAdapter := range devices {
 		ch := make(chan peerMapResult)
 		channels = append(channels, ch)
 		go func() {
@@ -53,9 +58,11 @@ func (t *TSymbioteUIServer) PeerMap(w http.ResponseWriter, r *tsymbiote.HTTPRequ
 				Nodes: map[string]Node{},
 			}
 
-			resp, err := t.CallAdapter(outgoingctx, r, "POST", knownAdapter, paths.Status.Adapter(), nil)
+			resp, err := t.CallAdapter(outgoingctx, r, "POST", knownAdapter.Hostname, paths.Status.Adapter(), nil)
 			if err != nil {
-				r.Log.Errorw("failed to call adapter, ignoring", "adapter", knownAdapter)
+				r.Log.Errorw("failed to call adapter", "adapter", knownAdapter.Hostname)
+				// Attempt to delete this adapter
+				t.DeleteAdapter(knownAdapter.Hostname)
 				result.Error = err.Error()
 				ch <- result
 				return
@@ -75,6 +82,8 @@ func (t *TSymbioteUIServer) PeerMap(w http.ResponseWriter, r *tsymbiote.HTTPRequ
 			// Need some type assertions due to wanting to generally do passthrough.
 			self := status["Self"].(map[string]any)
 			hostname := self["HostName"].(string)
+			// dumb cache of known hosts value with the real value
+			t.SetKnownHost(hostname, knownAdapter.Hostname)
 			peers := status["Peer"].(map[string]any)
 
 			for _, peer := range peers {
@@ -113,6 +122,7 @@ func (t *TSymbioteUIServer) PeerMap(w http.ResponseWriter, r *tsymbiote.HTTPRequ
 	nodeSlice := slices.Collect(maps.Values(mergedNodeMap))
 
 	nodeGraph := NodeGraph{
+		Hosts: t.GetHosts(),
 		Nodes: nodeSlice,
 		Edges: edges,
 	}

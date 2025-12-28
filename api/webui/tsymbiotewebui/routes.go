@@ -33,7 +33,6 @@ func (t *TSymbioteUIServer) RegisterRoutes() {
 	t.Route().Get().RegisterSimple("/debug/pprof/symbol", pprof.Symbol)
 	t.Route().Get().RegisterSimple("/debug/pprof/trace", pprof.Trace)
 
-	t.Route().Get().Register(paths.Hosts.WebUI(), t.Hosts)
 	t.Route().Get().Register(paths.PeerMap.WebUI(), t.PeerMap)
 
 	t.Route().Post().Register(paths.Ping.WebUI(), t.Ping)
