@@ -79,7 +79,6 @@ func (r *SecretsReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	for _, container := range pod.Spec.Containers {
 		// Not ours, get out of here!
 		if container.Name != "tsymbiote-adapter" && container.Name != "tsymbiote-webui" {
-			log.Info("tried to reconcile unsupported pod")
 			continue
 		}
 
