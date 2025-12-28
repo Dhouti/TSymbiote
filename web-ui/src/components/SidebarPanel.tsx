@@ -134,7 +134,7 @@ export const SidebarPanel = ({
                   {filteredHostsForDisplay.map((hostId) => (
                     <CheckboxListItem
                       key={hostId}
-                      label={hostId}
+                      label={REDACT_NODE_TITLES ? '*****' : hostId}
                       checked={selectedHosts.has(hostId)}
                       onChange={() => toggleHost(hostId)}
                       checkColor="green"
@@ -187,7 +187,7 @@ export const SidebarPanel = ({
                     filteredTargetsForDisplay.map((targetId) => (
                       <CheckboxListItem
                         key={targetId}
-                        label={targetId}
+                        label={REDACT_NODE_TITLES ? '*****' : targetId}
                         checked={selectedTargets.has(targetId)}
                         onChange={() => toggleTarget(targetId)}
                         checkColor="blue"

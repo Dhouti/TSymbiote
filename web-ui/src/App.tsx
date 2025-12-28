@@ -178,7 +178,7 @@ function App() {
 
             return {
               id: nodeData.id,
-              label: nodeData.label,
+              label: REDACT_NODE_TITLES ? '*****' : nodeData.label,
               fill: fillColor,
               size: 7,
               data: {
