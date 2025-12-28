@@ -4,7 +4,7 @@ before:
   hooks:
     - go mod tidy
     - go generate ./...
-    - sh -c "cd web-ui && npm run build"
+    - sh -c "cd web-ui && BUILD_VERSION=v{{.Version}} npm run build"
 
 builds:
   - id: tsymbiote

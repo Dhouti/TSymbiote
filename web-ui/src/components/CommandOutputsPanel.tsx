@@ -191,7 +191,7 @@ export const CommandOutputsPanel = ({
       </div>
 
       {/* Controls Legend */}
-      <div className="flex-shrink-0 border-t border-gray-700 p-3">
+      <div className="flex-shrink-0 border-t border-gray-700 p-3 relative">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-400">
           <ControlLegendItem keys={['W', 'A', 'S', 'D']} label="Pan" />
           <ControlLegendItem keys={['R']} label="Reset" />
@@ -205,6 +205,7 @@ export const CommandOutputsPanel = ({
           <ControlLegendItem keys={['R-Drag']} label="Pan" />
           <ControlLegendItem keys={['R-Click']} label="Context" />
         </div>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-white">{BUILD_VERSION}</span>
       </div>
     </div>
   );
